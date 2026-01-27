@@ -28,7 +28,7 @@ class AuthController extends Controller
 
             // Cek status user setelah login
             if (Auth::user()->status !== 'active') {
-                return redirect()->route('waiting');
+                return redirect()->route('waiting.verification');
             }
 
             return redirect()->intended('dashboard');

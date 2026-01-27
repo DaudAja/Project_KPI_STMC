@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | STMC Digital Klinik</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    
+
     <style>
         :root {
             /* --stmc-gradient: linear-gradient(135deg, #0d6efd 0%, #18bc9c 100%); */
@@ -121,7 +121,7 @@
 
             @if(auth()->user() && auth()->user()->role == 'admin')
             <div class="small text-white-50 px-4 mt-4 mb-2 text-uppercase" style="font-size: 11px;">Administrator</div>
-            <a href="/admin/users" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
+            <a href="{{ route('admin.users.index') }}" class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill me-2"></i> Verifikasi User
             </a>
             <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">

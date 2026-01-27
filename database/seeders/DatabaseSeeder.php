@@ -18,14 +18,14 @@ class DatabaseSeeder extends Seeder
             'nama_lengkap' => 'Admin STMC',
             'email' => 'admin@stmc.com',
             'no_telepon' => '08123456789',
-            'password' => Hash::make('admin123'), 
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
-            'status' => 'active', 
+            'status' => 'active',
         ]);
 
         User::create([
             'nama_lengkap' => 'Parma',
-            'email' => 'parma@stmc.com',
+            'email' => 'x',
             'no_telepon' => '082196031870',
             'password' => Hash::make('parma123'),
             'role' => 'user',

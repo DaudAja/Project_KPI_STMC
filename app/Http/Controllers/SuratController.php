@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Surat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class SuratController extends Controller
@@ -27,7 +28,7 @@ class SuratController extends Controller
             'foto_bukti'    => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::id();
         if ($request->hasFile('foto_bukti')) {
             $path = $request->file('foto_bukti')->store('arsip_pdf', 'public');
             $validated['foto_bukti'] = $path;
