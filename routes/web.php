@@ -4,64 +4,77 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
+// --- Rute Publik ---
 Route::get('/', function () {
     return view('Awal');
 });
 
-// Route untuk halaman tunggu (tidak kena middleware is_active)
+// --- Rute Autentikasi ---
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// --- Rute Terproteksi (Harus Login & Active) ---
 Route::get('/waiting-verification', function () {
+    $user = Auth::user();
+    if ($user && $user->status === 'active') {
+        return redirect()->route('dashboard');
+    }
     return view('auth.waiting-verification');
-})->name('waiting.verification');
+})->middleware('auth')->name('waiting.verification');
 
-// Route yang hanya bisa diakses jika sudah 'active'
+// Halaman Akun Nonaktif
+Route::get('/account-inactive', function () {
+    if (Auth::user()->status !== 'inactive') {
+        return redirect('/dashboard');
+    }
+    return view('auth.inactive');
+})->middleware('auth')->name('account.inactive');
+
+// --- Rute Terproteksi (Harus Login & Active) ---
 Route::middleware(['auth', 'is_active'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'dashboard']);
-    Route::get('/surat/masuk', [SuratController::class, 'indexMasuk']);
-    // ... route lainnya
+
+    // Utama
+    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+
+    // Modul Surat (Grup dengan Prefix 'surat')
+    Route::prefix('surat')->name('surat.')->group(function () {
+        Route::get('/input', [SuratController::class, 'input'])->name('input');
+        Route::post('/store', [SuratController::class, 'store'])->name('store');
+        Route::get('/masuk', [SuratController::class, 'masuk'])->name('masuk');
+        Route::get('/keluar', [SuratController::class, 'keluar'])->name('keluar');
+        Route::get('/{surat}', [SuratController::class, 'show'])->name('show');
+    });
+
+    // Grup Admin (Verifikasi User)
+    Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
+        // Manajemen User (Aktif/Nonaktif)
+        Route::get('/management', [UserController::class, 'userList'])->name('users.list');
+        Route::patch('/users/{user}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+
+        // Aksi Aktivasi Ulang Akun (PATCH)
+        Route::patch('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
+        // Route::patch('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
+
+        // Halaman Daftar Verifikasi (GET)
+        Route::get('/users', [UserController::class, 'verifikasi'])->name('users.index');
+
+        // Aksi Verifikasi (PATCH/DELETE) - INI YANG MEMPERBAIKI ERROR ANDA
+        Route::patch('/users/{user}/verify', [UserController::class, 'approve'])->name('users.approve');
+        Route::delete('/users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
+
+
+
+        // Route Log Aktivitas (Opsional jika sudah ada controllernya)
+        Route::get('/logs', function() { return view('admin.logs'); })->name('logs');
+    });
 });
-
-//LOGIN & REGISTER
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-//ADMIN
-// Di dalam grup Admin
-Route::middleware('can:admin')->prefix('admin')->name('admin.')->group(function () {
-    // Route::post('/admin/users/{id}/approve', [UserController::class, 'approveUser'])->name('admin.verifikasi.setujui');
-    // Route::get('/users', [UserController::class, 'verifikasi'])->name('users.index');
-    Route::get('/users', [UserController::class, 'verifikasi'])->name('users.index');
-
-    // TAMBAHKAN ROUTE INI:
-    Route::patch('/users/{user}/verify', [UserController::class, 'approve'])->name('users.approve');
-    Route::delete('/users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
-});
-
-;
-// Route::post('/admin/users/{id}/approve', [UserController::class, 'approveUser'])->name('admin.verifikasi.setujui')->middleware('auth');
-
-
-Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-
-//SURAT
-// Menampilkan Form
-Route::get('/surat/input', [SuratController::class, 'input'])->name('surat.input');
-// Memproses Form
-Route::post('/surat/store', [SuratController::class, 'store'])->name('surat.store');
-Route::get('/surat/show', [SuratController::class, 'show'])->name('surat.show');
-Route::get('/surat/masuk', [SuratController::class, 'masuk'])->name('surat.masuk');
-Route::get('/surat/keluar', [SuratController::class, 'keluar'])->name('surat.keluar');
-    // // Proses Simpan ke Database (Yang tadi ada error auth()->id)
-    // Route::post('/surat/store', [SuratController::class, 'store'])->name('surat.store');
-
-    // // Halaman Arsip
-    // Route::get('/surat/masuk', [SuratController::class, 'indexMasuk'])->name('surat.masuk');
-    // Route::get('/surat/keluar', [SuratController::class, 'indexKeluar'])->name('surat.keluar');
-
-    // // Halaman Detail (Untuk melihat PDF)
-    // Route::get('/surat/{surat}', [SuratController::class, 'show'])->name('surat.show');

@@ -34,6 +34,31 @@ class UserController extends Controller
         return view('admin.verifikasi', compact('users'));
     }
 
+    // Fungsi Nonaktifkan Akses User
+    public function deactivate(User $user)
+    {
+        $user->update(['status' => 'inactive']);
+        return redirect()->back()->with('success', 'Akses user ' . $user->nama_lengkap . ' telah dinonaktifkan.');
+    }
+
+    // Fungsi Aktivasi Ulang Akun
+    public function activate(User $user)
+    {
+        $user->update(['status' => 'active']);
+        return redirect()->back()->with('success', 'Akun ' . $user->nama_lengkap . ' telah diaktifkan kembali.');
+    }
+
+    // Fungsi Daftar User (Kecuali Diri Sendiri dan Pending)
+    public function userList()
+    {
+        // Kita ambil semua user kecuali diri sendiri dan yang masih pending
+        $users = User::where('id', '!=', Auth::user()->id)
+            ->whereIn('status', ['active', 'inactive'])
+            ->get();
+
+        return view('admin.users_list', compact('users'));
+    }
+
     // Fungsi Setujui User (Hanya bisa dibuka Admin)
     public function approve(User $user)
     {
@@ -43,7 +68,6 @@ class UserController extends Controller
 
     public function reject(User $user)
     {
-        // Kamu bisa menghapusnya (SoftDelete sesuai Model kamu) atau mengubah status jadi inactive
         $user->delete();
         return redirect()->back()->with('error', 'Pendaftaran user telah ditolak/dihapus.');
     }

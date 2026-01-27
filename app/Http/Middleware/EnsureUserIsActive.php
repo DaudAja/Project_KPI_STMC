@@ -16,6 +16,15 @@ class EnsureUserIsActive
             return redirect()->route('waiting.verification');
         }
 
+        // Jika status inactive, ke halaman blokir
+        if (Auth::check() && Auth::user()->status === 'inactive') {
+            // Pastikan user tidak terjebak loop redirect
+            if (!$request->is('account-inactive')) {
+                return redirect()->route('account.inactive');
+            }
+        }
+    
+
         return $next($request);
     }
 }
