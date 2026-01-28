@@ -9,22 +9,26 @@ use Illuminate\Support\Facades\Auth;
 class EnsureUserIsActive
 {
     public function handle(Request $request, Closure $next)
-    {
-        // Cek jika user login dan statusnya masih pending
-        if (Auth::check() && Auth::user()->status === 'pending') {
-            // Arahkan ke halaman informasi tunggu verifikasi
-            return redirect()->route('waiting.verification');
-        }
+{
+    if (Auth::check()) {
+        $status = Auth::user()->status;
 
-        // Jika status inactive, ke halaman blokir
-        if (Auth::check() && Auth::user()->status === 'inactive') {
-            // Pastikan user tidak terjebak loop redirect
+        // 1. Jika status INACTIVE, arahkan ke halaman blokir
+        if ($status === 'inactive') {
+            // Cek agar tidak terjadi loop redirect
             if (!$request->is('account-inactive')) {
                 return redirect()->route('account.inactive');
             }
         }
-    
 
-        return $next($request);
+        // 2. Jika status PENDING, arahkan ke halaman verifikasi
+        if ($status === 'pending') {
+            if (!$request->is('waiting-verification')) {
+                return redirect()->route('waiting.verification');
+            }
+        }
     }
+
+    return $next($request);
+}
 }
