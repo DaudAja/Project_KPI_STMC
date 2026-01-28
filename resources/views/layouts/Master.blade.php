@@ -127,14 +127,18 @@
                 </div>
                 <a href="{{ route('admin.users.list') }}"
                     class="nav-link {{ Request::routeIs('admin.users.list') ? 'active' : '' }}">
-                    <i class="bi bi-person-gear me-2"></i> Manajemen User
+                    <i class="bi bi-person-gear me-2"></i> Manajemen Pengguna
                 </a>
                 <a href="{{ route('admin.users.index') }}"
                     class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
-                    <i class="bi bi-person-check-fill me-2"></i> Verifikasi User
+                    <i class="bi bi-person-check-fill me-2"></i> Verifikasi Pengguna
                 </a>
                 <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
                     <i class="bi bi-terminal-fill me-2"></i> Riwayat Aktivitas
+                </a>
+                <a href="{{ route('admin.users.trash') }}"
+                    class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
+                    <i class="bi bi-trash3-fill me-2 text-danger"></i> Arship Pengguna
                 </a>
             @endif
         </div>

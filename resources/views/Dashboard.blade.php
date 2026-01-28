@@ -1,4 +1,4 @@
-@extends('layouts.Master') 
+@extends('layouts.Master')
 
 @section('content')
 <div class="container-fluid">
@@ -10,8 +10,8 @@
                         <h2 class="fw-bold mb-1 ">Selamat Datang di STMC Digital</h2>
                         <p class="mb-0 opacity-75">Halo, {{ auth()->user()->nama_lengkap }}. Berikut ringkasan aktivitas hari ini.</p>
                     </div>
-                    
-                    
+
+
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
 
     <div class="row">
         <div class="col-12">
-            
+
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <div>
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -126,7 +126,7 @@
         const h = String(now.getHours()).padStart(2, '0');
         const m = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
-        
+
         const el = document.getElementById('clock');
         if (el) el.innerText = h + ":" + m + ":" + s;
     }

@@ -82,4 +82,30 @@ class UserController extends Controller
         $users = User::where('status', 'pending')->get();
         return view('admin.verifikasi', compact('users'));
     }
+
+    // Menampilkan daftar user yang telah di-softdelete
+    public function trash()
+    {
+        // onlyTrashed() mengambil data yang kolom deleted_at nya TIDAK NULL
+        $users = User::onlyTrashed()->get();
+        return view('admin.users_trash', compact('users'));
+    }
+
+    // Mengembalikan user yang terhapus
+    public function restore($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore();
+
+        return redirect()->route('admin.users.index')->with('success', 'User ' . $user->nama_lengkap . ' berhasil dikembalikan.');
+    }
+
+    // Menghapus permanen dari database
+    public function forceDelete($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->forceDelete();
+
+        return redirect()->back()->with('success', 'User dihapus selamanya dari sistem.');
+    }
 }

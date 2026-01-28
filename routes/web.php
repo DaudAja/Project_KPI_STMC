@@ -68,10 +68,18 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         // Halaman Daftar Verifikasi (GET)
         Route::get('/users', [UserController::class, 'verifikasi'])->name('users.index');
 
-        // Aksi Verifikasi (PATCH/DELETE) - INI YANG MEMPERBAIKI ERROR ANDA
+        // Aksi Verifikasi (PATCH/DELETE) - Approve atau Reject
         Route::patch('/users/{user}/verify', [UserController::class, 'approve'])->name('users.approve');
         Route::delete('/users/{user}/reject', [UserController::class, 'reject'])->name('users.reject');
 
+        // Halaman Arsip User yang ditolak/dihapus
+        Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
+
+        // Aksi Restore (Mengembalikan User)
+        Route::patch('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+
+        // Aksi Force Delete (Hapus Selamanya)
+        Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force_delete');
 
 
         // Route Log Aktivitas (Opsional jika sudah ada controllernya)

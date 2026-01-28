@@ -27,11 +27,15 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Cek status user setelah login
-            if (Auth::user()->status !== 'active') {
+            if (Auth::user()->status === 'inactive') {
+                return redirect()->route('account.inactive');
+            } elseif (Auth::user()->status === 'pending') {
                 return redirect()->route('waiting.verification');
+            } elseif (Auth::user()->status === 'active') {
+                return redirect()->route('dashboard');
             }
 
-            return redirect()->intended('dashboard');
+            // return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([

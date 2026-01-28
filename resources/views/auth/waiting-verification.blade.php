@@ -56,9 +56,9 @@
             </div>
 
             <div class="d-grid gap-2">
-                <a href="https://wa.me/628123456789" target="_blank" class="btn btn-success rounded-pill py-2">
+                {{-- <a href="https://wa.me/628123456789" target="_blank" class="btn btn-success rounded-pill py-2">
                     <i class="bi bi-whatsapp me-2"></i> Hubungi Admin
-                </a>
+                </a> --}}
 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf

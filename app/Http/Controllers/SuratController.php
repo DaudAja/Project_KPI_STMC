@@ -20,7 +20,8 @@ class SuratController extends Controller
     // 2. FUNGSI UNTUK PROSES SIMPAN (POST)
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        // 1. Validasi Input
+        $request->validate([
             'nomor_surat'   => 'required|unique:surats,nomor_surat',
             'nama_surat'    => 'required|string|max:255',
             'jenis_surat'   => 'required|in:masuk,keluar',
@@ -28,13 +29,22 @@ class SuratController extends Controller
             'foto_bukti'    => 'required|file|mimes:pdf|max:5120',
         ]);
 
-        $validated['user_id'] = Auth::id();
+        // 2. Proses file
         if ($request->hasFile('foto_bukti')) {
-            $path = $request->file('foto_bukti')->store('arsip_pdf', 'public');
-            $validated['foto_bukti'] = $path;
+            $file = $request->file('foto_bukti');
+            $nama_file = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->move(public_path('storage/surat'), $nama_file);
         }
 
-        Surat::create($validated);
+        // 3. Simpan ke database
+        Surat::create([
+            'user_id'       => Auth::id(),
+            'nomor_surat'   => $request->nomor_surat,
+            'jenis_surat'   => $request->jenis_surat,
+            'nama_surat'    => $request->nama_surat,
+            'tanggal_surat' => $request->tanggal_surat,
+            'foto_bukti'    => $nama_file,
+        ]);
 
         return redirect()->route('dashboard')->with('success', 'Dokumen PDF berhasil diarsipkan!');
     }
