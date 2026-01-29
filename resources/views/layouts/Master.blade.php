@@ -138,7 +138,7 @@
                 </a>
                 <a href="{{ route('admin.users.trash') }}"
                     class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
-                    <i class="bi bi-trash3-fill me-2 text-danger"></i> Arship Pengguna
+                    <i class="bi bi-trash3-fill me-2 text-danger"></i> Arsip Pengguna
                 </a>
             @endif
         </div>
