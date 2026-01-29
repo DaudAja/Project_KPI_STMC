@@ -21,7 +21,7 @@ class SuratController extends Controller
     public function store(Request $request)
     {
         // 1. Validasi Input
-        $request->validate([
+        $validated =$request->validate([
             'nomor_surat'   => 'required|unique:surats,nomor_surat',
             'nama_surat'    => 'required|string|max:255',
             'jenis_surat'   => 'required|in:masuk,keluar',
@@ -29,11 +29,17 @@ class SuratController extends Controller
             'foto_bukti'    => 'required|file|mimes:pdf|max:5120',
         ]);
 
+        $validated['user_id'] = Auth::id();
+
         // 2. Proses file
         if ($request->hasFile('foto_bukti')) {
-            $file = $request->file('foto_bukti');
-            $nama_file = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
-            $file->move(public_path('storage/surat'), $nama_file);
+            // Simpan ke folder 'surat' di dalam disk 'public' agar konsisten dengan asset()
+             $path = $request->file('foto_bukti')->store('surat', 'public');
+             $validated['foto_bukti'] = basename($path); // Simpan nama filenya saja
+             
+            // $file = $request->file('foto_bukti');
+            // $nama_file = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            // $file->move(public_path('storage/surat'), $nama_file);
         }
 
         // 3. Simpan ke database
@@ -43,7 +49,7 @@ class SuratController extends Controller
             'jenis_surat'   => $request->jenis_surat,
             'nama_surat'    => $request->nama_surat,
             'tanggal_surat' => $request->tanggal_surat,
-            'foto_bukti'    => $nama_file,
+            'foto_bukti'    => $validated['foto_bukti'],
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Dokumen PDF berhasil diarsipkan!');

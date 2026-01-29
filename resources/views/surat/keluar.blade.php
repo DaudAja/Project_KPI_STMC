@@ -39,8 +39,12 @@
                             <td>{{ optional($s->tanggal_surat)->translatedFormat('d F Y') ?? '-' }}</td>
                             <td><small class="text-muted">{{ $s->user->nama_lengkap ?? 'Admin' }}</small></td>
                             <td class="text-center">
+                                <a href="{{ asset('storage/surat/' . $s->foto_bukti) }}" target="_blank" class="btn btn-sm btn-outline-success border-0">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Buka
+                                </a>
+
                                 <a href="{{ route('surat.show', $s->id) }}" class="btn btn-sm btn-outline-success border-0">
-                                    <i class="bi bi-eye-fill"></i>
+                                    <i class="bi bi-eye-fill"></i> Detail
                                 </a>
                             </td>
                         </tr>

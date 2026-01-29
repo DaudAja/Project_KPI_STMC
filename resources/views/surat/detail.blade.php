@@ -91,17 +91,19 @@
                         <small class="text-muted">Digital Scanner STMC</small>
                     </div>
                     <div class="card-body p-0">
-                    @if ($surat->foto_bukti && Storage::disk('public')->exists($surat->foto_bukti))
-                        <iframe src="{{ asset('storage/surat/' . $surat->foto_bukti) }}#toolbar=0" width="100%" height="100%" style="border: none;"></iframe>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="bi bi-file-earmark-x fs-1 text-muted"></i>
-                            <p class="text-muted mt-2">Berkas PDF tidak ditemukan di server.</p>
-                        </div>
-                    @endif
+                        @if ($surat->foto_bukti)
+                            <iframe src="{{ asset('storage/surat/' . $surat->foto_bukti) }}#toolbar=0" width="100%" height="650px"
+                                style="border: none;">
+                            </iframe>
+                        @else
+                            <div class="p-5 text-center text-secondary">
+                                <i class="bi bi-file-earmark-x display-1"></i>
+                                <p class="mt-3">Dokumen tidak ditemukan atau belum diunggah.</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection
