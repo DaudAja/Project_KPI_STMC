@@ -50,33 +50,34 @@ class SuratController extends Controller
     }
 
     public function show(Surat $surat)
-{
-    // Memastikan data user ikut dipanggil
-    $surat->load('user');
-    return view('surat.detail', compact('surat'));
-}
-public function destroy(Surat $surat)
-{
-    // 1. Hapus file fisik dari storage public
-    if ($surat->foto_bukti && Storage::disk('public')->exists($surat->foto_bukti)) {
-        Storage::disk('public')->delete($surat->foto_bukti);
+    {
+        // Memastikan data user ikut dipanggil
+        $surat->load('user');
+        return view('surat.detail', compact('surat'));
     }
+    public function destroy(Surat $surat)
+    {
+        // 1. Hapus file fisik dari storage public
+        if ($surat->foto_bukti && Storage::disk('public')->exists($surat->foto_bukti)) {
+            Storage::disk('public')->delete($surat->foto_bukti);
+        }
 
-    // 2. Hapus data dari database
-    $surat->delete();
+        // 2. Hapus data dari database
+        $surat->delete();
 
-    return redirect()->route('dashboard')->with('success', 'Arsip surat berhasil dihapus selamanya.');
+        return redirect()->route('dashboard')->with('success', 'Arsip surat berhasil dihapus selamanya.');
     }
     public function masuk()
     {
+        // Mengambil data khusus surat masuk dengan pagination
         $surat = Surat::where('jenis_surat', 'masuk')->latest()->paginate(10);
         return view('surat.masuk', compact('surat'));
     }
     public function keluar()
-{
-    // Mengambil data khusus surat keluar dengan pagination
-    $surat = \App\Models\Surat::where('jenis_surat', 'keluar')->latest()->paginate(10);
+    {
+        // Mengambil data khusus surat keluar dengan pagination
+        $surat = \App\Models\Surat::where('jenis_surat', 'keluar')->latest()->paginate(10);
 
-    return view('surat.keluar', compact('surat'));
-}
+        return view('surat.keluar', compact('surat'));
+    }
 }
