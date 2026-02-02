@@ -33,10 +33,11 @@ class SuratController extends Controller
 
         // 2. Proses file
         if ($request->hasFile('foto_bukti')) {
+
             // Simpan ke folder 'surat' di dalam disk 'public' agar konsisten dengan asset()
              $path = $request->file('foto_bukti')->store('surat', 'public');
              $validated['foto_bukti'] = basename($path); // Simpan nama filenya saja
-             
+
             // $file = $request->file('foto_bukti');
             // $nama_file = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
             // $file->move(public_path('storage/surat'), $nama_file);
@@ -69,8 +70,7 @@ class SuratController extends Controller
         }
 
         // 2. Hapus data dari database
-        $surat->delete();
-
+        $surat->delete();   
         return redirect()->route('dashboard')->with('success', 'Arsip surat berhasil dihapus selamanya.');
     }
     public function masuk()
