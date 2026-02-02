@@ -7,6 +7,7 @@ use App\Models\Surat;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -24,7 +25,40 @@ class UserController extends Controller
     // Fungsi Profil
     public function profile()
     {
-        return view('user.profile');
+        return view('user.profile', [
+            'user' => Auth::user()
+        ]);
+    }
+
+    // Fungsi Update Profil
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($request->only('name', 'email'));
+        return redirect()->back()->with('success_profile', 'Profil berhasil diperbarui!');
+    }
+
+    // Fungsi Update Password
+    public function updatePassword(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Password lama tidak cocok.']);
+        }
+
+        $user->update(['password' => Hash::make($request->password)]);
+        return redirect()->back()->with('success_password', 'Password berhasil diperbarui.');
     }
 
     // Fungsi Verifikasi Admin (Hanya bisa dibuka Admin)
