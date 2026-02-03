@@ -9,17 +9,30 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Models\ActivityLog;
 
 class UserController extends Controller
 {
     // Ini fungsi Dashboard yang kita pindah ke sini
     public function dashboard()
     {
-        $masukHariIni = Surat::where('jenis_surat', 'masuk')->whereDate('created_at', Carbon::today())->count();
-        $keluarHariIni = Surat::where('jenis_surat', 'keluar')->whereDate('created_at', Carbon::today())->count();
-        $suratTerbaru = Surat::whereDate('created_at', Carbon::today())->latest()->get();
 
-        return view('dashboard', compact('masukHariIni', 'keluarHariIni', 'suratTerbaru'));
+        $masukHariIni = Surat::where('jenis_surat', 'masuk')->whereDate('created_at', today())->count();
+        $keluarHariIni = Surat::where('jenis_surat', 'keluar')->whereDate('created_at', today())->count();
+
+        // Sesuaikan dengan variabel yang dipanggil di blade Anda ($suratTerbaru)
+        $suratTerbaru = Surat::whereDate('created_at', today())->latest()->get();
+
+        // TAMBAHKAN BARIS INI:
+        $logs = ActivityLog::with('user')->latest()->take(5)->get();
+
+        // Masukkan $logs ke dalam return view
+        return view('Dashboard', compact(
+            'masukHariIni',
+            'keluarHariIni',
+            'suratTerbaru',
+            'logs' // <-- Pastikan ini ada
+        ));
     }
 
     // Fungsi Profil

@@ -65,7 +65,11 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'Asia/Makassar',
+    // 'timezone' => env('APP_TIMEZONE', 'UTC'),
+    // Untuk WIB gunakan 'Asia/Jakarta'
+    // Untuk WITA gunakan 'Asia/Makassar'
+    // Untuk WIT gunakan 'Asia/Jayapura'
 
     /*
     |--------------------------------------------------------------------------

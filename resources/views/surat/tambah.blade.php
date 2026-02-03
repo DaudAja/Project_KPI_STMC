@@ -12,13 +12,12 @@
                     <div class="card-body p-4">
                         <form action="{{ route('surat.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label small fw-bold text-secondary">NOMOR SURAT</label>
-                                    <input type="text" name="nomor_surat"
-                                        class="form-control @error('nomor_surat') is-invalid @enderror"
-                                        placeholder="Contoh: 001/STMC/I/2026" required value="{{ old('nomor_surat') }}">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">NOMOR SURAT</label>
+                                    <input type="text" name="nomor_surat" class="form-control bg-light"
+                                        value="{{ $nomorOtomatis }}" readonly>
+                                    <small class="text-muted">Nomor surat dibuat otomatis oleh sistem.</small>
                                     @error('nomor_surat')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
