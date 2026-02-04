@@ -24,8 +24,13 @@
 
         /* Sidebar Modern */
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
             width: 280px;
             min-height: 100vh;
+            overflow-y: auto;
             background: var(--stmc-dark);
             color: white;
             transition: all 0.3s;
@@ -65,6 +70,9 @@
         }
 
         .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            padding: 20px;
             flex-grow: 1;
             min-width: 0;
         }

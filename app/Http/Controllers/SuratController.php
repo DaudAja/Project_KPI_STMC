@@ -48,8 +48,8 @@ class SuratController extends Controller
     public function store(Request $request)
     {
         // 1. Validasi Input
-        // nomor_surat dihapus dari required karena kita generate di server agar lebih aman
         $request->validate([
+            'nomor_surat'   => 'required|string|unique:surats,nomor_surat',
             'nama_surat'    => 'required|string|max:255',
             'jenis_surat'   => 'required|in:masuk,keluar',
             'tanggal_surat' => 'required|date',
@@ -65,12 +65,13 @@ class SuratController extends Controller
 
         // 3. Generate Nomor Surat Final (Tepat sebelum simpan)
         // Gunakan withTrashed() di dalam fungsi generateNomorSurat nanti
-        $nomorFinal = $this->generateNomorSurat($request->jenis_surat);
+        // $nomorFinal = $this->generateNomorSurat($request->jenis_surat);
 
         // 4. Simpan ke database
         $surat = Surat::create([
             'user_id'       => Auth::id(),
-            'nomor_surat'   => $nomorFinal,
+            // 'nomor_surat'   => $nomorFinal,
+            'nomor_surat'   => $request->nomor_surat,
             'jenis_surat'   => $request->jenis_surat,
             'nama_surat'    => $request->nama_surat,
             'tanggal_surat' => $request->tanggal_surat,
@@ -82,7 +83,7 @@ class SuratController extends Controller
             'Input Surat',
             'Berhasil mengarsipkan surat baru dengan nomor: ' . $surat->nomor_surat
         );
-        return redirect()->route('dashboard')->with('success', 'Arsip Berhasil! Nomor Surat: ' . $nomorFinal);
+        return redirect()->route('dashboard')->with('success', 'Arsip Berhasil!');
     }
 
     public function show(Surat $surat)

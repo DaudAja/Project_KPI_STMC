@@ -52,6 +52,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
 
+        // dd(gettype($user), is_object($user) ? get_class($user) : null, $user);
         $user->update($request->only('name', 'email'));
         return redirect()->back()->with('success_profile', 'Profil berhasil diperbarui!');
     }

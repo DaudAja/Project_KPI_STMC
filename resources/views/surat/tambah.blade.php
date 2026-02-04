@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-fluid animate__animated animate__fadeIn">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom">
                         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-file-earmark-plus me-2 text-primary"></i> Input
@@ -15,12 +15,24 @@
                             <div class="row">
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">NOMOR SURAT</label>
-                                    <input type="text" name="nomor_surat" class="form-control bg-light"
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="bi bi-hash"></i></span>
+                                        <input type="text" name="nomor_surat" id="nomor_surat"
+                                            class="form-control @error('nomor_surat') is-invalid @enderror"
+                                            value="{{ $nomorOtomatis }}"
+                                            {{ auth()->user()->role !== 'admin' ? 'readonly' : '' }}
+                                            placeholder="Masukkan nomor surat...." required>
+                                    </div>
+                                    <small class="text-muted">Sistem memberikan nomor otomatis, admin bisa ubah jika tidak sesuai.</small>
+                                    @error('nomor_surat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    {{-- <input type="text" name="nomor_surat" class="form-control bg-light"
                                         value="{{ $nomorOtomatis }}" readonly>
                                     <small class="text-muted">Nomor surat dibuat otomatis oleh sistem.</small>
                                     @error('nomor_surat')
                                         <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    @enderror --}}
                                 </div>
 
                                 <div class="col-md-6 mb-3">
