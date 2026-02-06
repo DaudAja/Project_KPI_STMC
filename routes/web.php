@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -11,11 +12,33 @@ Route::get('/', function () {
     return view('Awal');
 });
 
+//
+Route::resource('category', CategoryController::class);
+
 // --- Rute Profil Pengguna ---
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/password', [UserController::class, 'updatePassword'])->name('profile.password');
+});
+
+//
+Route::middleware(['auth', 'is_active'])->group(function () {
+
+    // --- Rute Master Kategori ---
+    // Menggunakan resource agar otomatis punya index, store, edit, update, destroy
+    Route::resource('categories', CategoryController::class);
+
+    // --- Rute Log Aktivitas (Halaman Khusus) ---
+    Route::get('/aktivitas', [UserController::class, 'indexAktivitas'])->name('aktivitas.index');
+
+    // --- Rute Surat (Tambahan untuk AJAX Nomor Otomatis) ---
+    // Rute ini penting agar saat pilih kategori, nomor langsung muncul tanpa refresh
+    Route::get('/get-nomor-surat/{categoryId}', [SuratController::class, 'getNomorAjax']);
+
+    // Rute surat yang sudah ada (pastikan sudah mengarah ke controller yang benar)
+    Route::get('/surat/input', [SuratController::class, 'input'])->name('surat.input');
+    Route::post('/surat/store', [SuratController::class, 'store'])->name('surat.store');
 });
 
 // --- Rute Autentikasi ---
