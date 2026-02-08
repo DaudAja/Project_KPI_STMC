@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Category;
+use App\Models\ActivityLog;
 
 class SuratController extends Controller
 {
@@ -68,9 +69,9 @@ class SuratController extends Controller
     public function input()
     {
         // Ambil semua kategori untuk ditampilkan di dropdown
-        $categories = \App\Models\Category::all();
+        $category = Category::all();
 
-        return view('surat.tambah', compact('categories'));
+        return view('surat.tambah', compact('category'));
     }
     // public function input(Request $request)
     // {
@@ -91,10 +92,10 @@ class SuratController extends Controller
             'nama_surat'    => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
             'foto_bukti'    => 'required|file|mimes:pdf|max:5120',
-            'nomor_surat'   => 'required|unique:surats,nomor_surat', // Pastikan nomor unik
+            'nomor_surat'   => 'required|unique:surats,nomor_surat',
         ]);
 
-        // Proses upload file (Tetap gunakan logika Anda yang sudah ada)
+        // Proses upload file
         $nama_file = null;
         if ($request->hasFile('foto_bukti')) {
             $path = $request->file('foto_bukti')->store('surat', 'public');
@@ -112,7 +113,7 @@ class SuratController extends Controller
         ]);
 
         // Tambahkan Log Aktivitas (Opsional tapi sangat disarankan)
-        \App\Models\ActivityLog::record('Tambah Surat', 'Menambahkan surat nomor: ' . $surat->nomor_surat);
+        ActivityLog::record('Tambah Surat', 'Menambahkan surat nomor: ' . $surat->nomor_surat);
 
         return redirect()->route('dashboard')->with('success', 'Surat berhasil diarsipkan!');
     }

@@ -4,188 +4,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | STMC Digital Klinik</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dashboard') | STMC Digital Klinik</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    @stack('styles')
 
     <style>
         :root {
-            /* --stmc-gradient: linear-gradient(135deg, #0d6efd 0%, #18bc9c 100%); */
-            --stmc-gradient: #0d6efd;
+            --stmc-primary: #0d6efd;
             --stmc-dark: #2c3e50;
+            --stmc-sidebar-bg: #1a252f;
+            --sidebar-width: 280px;
         }
 
         body {
-            background-color: #f0f2f5;
+            background-color: #f8f9fa;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            display: flex;
         }
 
-        /* Sidebar Modern */
+        /* Sidebar Styling */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            width: 280px;
-            min-height: 100vh;
-            overflow-y: auto;
-            background: var(--stmc-dark);
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--stmc-sidebar-bg);
             color: white;
-            transition: all 0.3s;
-            z-index: 1000;
+            transition: all 0.3s ease;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-header {
-            padding: 30px 20px;
-            background: rgba(0, 0, 0, 0.1);
+            padding: 2rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
+        .sidebar-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        /* Scrollbar Sidebar */
+        .sidebar-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Nav Link Styling */
         .nav-link {
-            color: rgba(255, 255, 255, 0.7);
-            margin: 5px 15px;
-            border-radius: 10px;
-            padding: 12px 20px;
-            transition: 0.3s;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0.2rem 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            transition: 0.2s ease;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            width: 30px;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
             color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .nav-link.active {
-            background: var(--stmc-gradient) !important;
             color: white !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: var(--stmc-primary) !important;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
         }
 
-        /* Navbar & Content */
-        .navbar {
-            background: white;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-            padding: 15px 30px;
-        }
-
+        /* Main Content Area */
         .main-content {
-            margin-left: 280px;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
             min-height: 100vh;
-            padding: 20px;
-            flex-grow: 1;
-            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
         }
 
-        /* Card Styling agar senada */
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        .top-navbar {
+            background: white;
+            height: 70px;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .btn-stmc {
-            background: var(--stmc-gradient);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            transition: 0.3s;
+        .content-body {
+            padding: 2rem;
+            flex: 1;
         }
 
-        .btn-stmc:hover {
-            opacity: 0.9;
-            color: white;
-            transform: translateY(-2px);
+        .sidebar-divider {
+            margin: 1.5rem 1.5rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: calc(-1 * var(--sidebar-width));
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .sidebar.active {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 
-<body class="d-flex">
+<body>
 
-    <nav class="sidebar shadow">
+    <aside class="sidebar shadow" id="sidebar">
         <div class="sidebar-header">
-            <img src="{{ asset('Images/logoST.png') }}" alt="Logo" width="50" class="mb-2">
-            <h6 class="fw-bold mb-0">STMC DIGITAL</h6>
-            <small class="opacity-50 text-uppercase" style="font-size: 10px; letter-spacing: 1px;">Klinik
-                Management</small>
+            <img src="{{ asset('Images/logoST.png') }}" alt="Logo" width="45" class="mb-2">
+            <h6 class="fw-bold mb-0 text-white">STMC DIGITAL</h6>
+            <span class="text-white-50" style="font-size: 10px; letter-spacing: 1px;">KLINIK MANAGEMENT</span>
         </div>
 
-        <div class="mt-4">
-            <div class="small text-white-50 px-4 mb-2 text-uppercase" style="font-size: 11px;">Utama</div>
+        <div class="sidebar-content">
+            <div class="sidebar-divider">Utama</div>
             <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-                <i class="bi bi-grid-1x2-fill me-2"></i> Dashboard
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
             </a>
             <a href="/profile" class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
-                <i class="bi bi-person-badge-fill me-2"></i> Profil Saya
+                <i class="bi bi-person-badge-fill"></i> Profil Saya
             </a>
 
-            <div class="small text-white-50 px-4 mt-4 mb-2 text-uppercase" style="font-size: 11px;">Arsip Surat</div>
+            <div class="sidebar-divider">Arsip Surat</div>
             <a href="/surat/input" class="nav-link {{ Request::is('surat/input') ? 'active' : '' }}">
-                <i class="bi bi-plus-square-fill me-2"></i> Input Surat
+                <i class="bi bi-plus-square-fill"></i> Input Surat
             </a>
             <a href="/surat/masuk" class="nav-link {{ Request::is('surat/masuk*') ? 'active' : '' }}">
-                <i class="bi bi-arrow-down-left-circle-fill me-2"></i> Surat Masuk
+                <i class="bi bi-arrow-down-left-circle-fill"></i> Surat Masuk
             </a>
             <a href="/surat/keluar" class="nav-link {{ Request::is('surat/keluar*') ? 'active' : '' }}">
-                <i class="bi bi-arrow-up-right-circle-fill me-2"></i> Surat Keluar
+                <i class="bi bi-arrow-up-right-circle-fill"></i> Surat Keluar
             </a>
 
-            @if (auth()->user() && auth()->user()->role == 'admin')
-                <div class="small text-white-50 px-4 mt-4 mb-2 text-uppercase" style="font-size: 11px;">Administrator
-                </div>
-                <a href="{{ route('admin.users.list') }}"
-                    class="nav-link {{ Request::routeIs('admin.users.list') ? 'active' : '' }}">
-                    <i class="bi bi-person-gear me-2"></i> Manajemen Pengguna
+            @if (auth()->check() && auth()->user()->role == 'admin')
+                <div class="sidebar-divider">Administrator</div>
+                <a href="{{ route('admin.users.list') }}" class="nav-link {{ Request::routeIs('admin.users.list') ? 'active' : '' }}">
+                    <i class="bi bi-person-gear"></i> Manajemen User
                 </a>
-                <a href="{{ route('admin.users.index') }}"
-                    class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
-                    <i class="bi bi-person-check-fill me-2"></i> Verifikasi Pengguna
+                <a href="{{ route('admin.users.index') }}" class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
+                    <i class="bi bi-person-check-fill"></i> Verifikasi
                 </a>
                 <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
-                    <i class="bi bi-terminal-fill me-2"></i> Riwayat Aktivitas
+                    <i class="bi bi-terminal-fill"></i> Aktivitas
                 </a>
-                <a href="{{ route('admin.users.trash') }}"
-                    class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
-                    <i class="bi bi-trash3-fill me-2 text-danger"></i> Arsip Pengguna
+                <a href="{{ route('admin.users.trash') }}" class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
+                    <i class="bi bi-trash3-fill text-danger"></i> Arsip User
                 </a>
             @endif
         </div>
 
-        <div class="p-4 mt-auto">
+        <div class="p-3 border-top border-secondary-subtle">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-outline-light btn-sm w-100 rounded-pill">
+                <button type="submit" class="btn btn-outline-light btn-sm w-100 rounded-pill py-2">
                     <i class="bi bi-box-arrow-left me-2"></i> Keluar
                 </button>
             </form>
         </div>
-    </nav>
+    </aside>
 
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <span class="text-muted small fw-medium">
-                    <i class="bi bi-calendar-event me-1"></i> {{ date('d F Y') }}
+    <main class="main-content">
+        <header class="top-navbar">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-light d-lg-none me-3" id="sidebarToggle">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <span class="text-muted small d-none d-md-block fw-medium">
+                    <i class="bi bi-calendar3 me-2 text-primary"></i>{{ date('d F Y') }}
                 </span>
-                <div class="ms-auto d-flex align-items-center">
-                    <div class="text-end me-3 d-none d-sm-block">
-                        <div class="fw-bold mb-0" style="font-size: 14px;">{{ auth()->user()->nama_lengkap }}</div>
-                        <div class="text-muted" style="font-size: 11px;">{{ strtoupper(auth()->user()->role) }}</div>
-                    </div>
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
-                        style="width: 40px; height: 40px; background: var(--stmc-gradient) !important;">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <div class="text-end me-3 d-none d-sm-block">
+                    <p class="fw-bold mb-0 lh-1" style="font-size: 0.9rem;">{{ auth()->user()->nama_lengkap }}</p>
+                    <small class="text-primary fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+                        {{ auth()->user()->role }}
+                    </small>
+                </div>
+                <div class="bg-primary text-white rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                     style="width: 42px; height: 42px; background: var(--stmc-primary) !important;">
+                    <i class="bi bi-person-fill fs-5"></i>
                 </div>
             </div>
-        </nav>
+        </header>
 
-        <div class="container-fluid p-4">
+        <div class="content-body">
             @yield('content')
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Logika Sidebar Mobile
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
+
+        // Tutup sidebar jika user klik di luar pada tampilan mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+
+    @stack('scripts')
 </body>
 
-</html>
+</html

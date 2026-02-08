@@ -4,12 +4,12 @@
     <div class="container-fluid">
         <div class="row mb-4">
             <div class="col-12 text-white">
-                <div class="card p-4 border-0 shadow-sm text-white animate__animated animate__fadeIn"
+                <div class="card p-4 border-0 shadow-sm text-dark animate__animated animate__fadeIn"
                     style="background: var(--stmc-gradient); border-radius: 20px;">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h2 class="fw-bold mb-1 ">Selamat Datang di STMC Digital</h2>
-                            <p class="mb-0 opacity-75">Halo, {{ auth()->user()->nama_lengkap }}. Berikut ringkasan aktivitas
+                            <h2 class="fw-bold mb-1" style="color: var(--stmc-primary)">Selamat Datang di STMC Digital</h2>
+                            <p class="mb-0 opacity-75"">Halo, {{ auth()->user()->nama_lengkap }}. Berikut ringkasan aktivitas
                                 hari ini.</p>
                         </div>
                     </div>

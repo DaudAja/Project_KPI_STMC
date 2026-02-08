@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('surats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('categories_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('nomor_surat');
             $table->string('nama_surat');
             $table->enum('jenis_surat', ['masuk', 'keluar']);

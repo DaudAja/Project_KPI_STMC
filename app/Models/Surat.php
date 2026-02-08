@@ -12,7 +12,7 @@ class Surat extends Model
 
     protected $fillable = [
     'user_id',
-    'categories_id', 
+    'categorys_id',
     'nomor_surat',
     'nama_surat',
     'jenis_surat',
@@ -25,7 +25,7 @@ class Surat extends Model
      */
     public function category()
     {
-        return $this->belongsTo(Category::class, 'categories_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**

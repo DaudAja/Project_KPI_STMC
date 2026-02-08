@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
@@ -12,7 +13,7 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Category::create([
+        Category::create([
             'nama_kategori' => 'Surat Keputusan',
             'jenis_kategori' => 'keluar',
             'instansi' => 'STMC',
@@ -20,7 +21,7 @@ class CategorySeeder extends Seeder
             'format_nomor' => '{no}/{instansi}/{kode}/{bulan}/{tahun}'
         ]);
 
-        \App\Models\Category::create([
+        Category::create([
             'nama_kategori' => 'Surat Internal Pusat',
             'jenis_kategori' => 'masuk',
             'instansi' => 'KTPS',

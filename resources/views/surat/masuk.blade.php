@@ -4,8 +4,7 @@
     <div class="container-fluid animate__animated animate__fadeIn">
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card p-4 border-0 shadow-sm text-white"
-                    style="background: var(--stmc-gradient); border-radius: 20px;">
+                  <div class="card p-4 border-0 shadow-sm text-white" style="background: linear-gradient(45deg, #2478ef, #1737c3); border-radius: 20px;">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h2 class="fw-bold mb-1">Arsip Surat Masuk</h2>
