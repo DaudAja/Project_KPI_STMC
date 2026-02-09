@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kategori'); // Contoh: Surat Tugas
-            $table->enum('jenis_kategori', ['masuk', 'keluar']); // Jenis: masuk atau keluar
-            $table->string('instansi');      // Contoh: STMC atau KANTORPUSAT
+            $table->enum('jenis', ['masuk', 'keluar']); // Jenis: masuk atau keluar
+            $table->enum('sifat', ['internal', 'external']); // Sifat Surat
             $table->string('kode_kategori'); // Contoh: ST atau SI
             $table->string('format_nomor');  // Contoh: {no}/{instansi}/{kode}/{bulan}/{tahun}
             $table->timestamps();

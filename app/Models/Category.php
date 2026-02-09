@@ -12,7 +12,8 @@ class Category extends Model
     // Daftarkan semua kolom yang bisa diisi
     protected $fillable = [
         'nama_kategori',
-        'instansi',
+        'jenis',
+        'sifat',
         'kode_kategori',
         'format_nomor'
     ];

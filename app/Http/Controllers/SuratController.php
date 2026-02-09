@@ -13,18 +13,32 @@ use App\Models\ActivityLog;
 
 class SuratController extends Controller
 {
-    // private function generateNomorSurat($jenis)
+    // 1. Fungsi untuk dipanggil JavaScript saat memilih Sifat & Jenis
+    public function getCategories($sifat, $jenis)
+    {
+        $categories = Category::where('sifat', $sifat)
+            ->where('jenis', $jenis)
+            ->get();
+
+        return response()->json($categories);
+    }
+
+    // 2. Fungsi AJAX untuk mendapatkan nomor surat otomatis
+    public function getNomorAjax($categoryId)
+    {
+        $nomor = $this->generateNomorSurat($categoryId);
+        return response()->json(['nomor' => $nomor]);
+    }
+
+    // 3. Inti Logika Penomoran (Dinamis)
     private function generateNomorSurat($categoryId)
     {
-        // 1. Ambil data kategori dari DB
         $category = Category::findOrFail($categoryId);
 
-        // 2. Siapkan variabel pendukung
         $tahun = date('Y');
-        $bulanRomawi = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-        $bulan = $bulanRomawi[date('n')];
+        $bulanDigit = date('m'); // FORMAT BULAN ANGKA (01, 02, dst)
 
-        // 3. Hitung urutan berdasarkan category_id
+        // Hitung urutan berdasarkan kategori tersebut di tahun ini
         $urutan = Surat::withTrashed()
             ->where('category_id', $categoryId)
             ->whereYear('created_at', $tahun)
@@ -32,18 +46,56 @@ class SuratController extends Controller
 
         $no = str_pad($urutan, 3, '0', STR_PAD_LEFT);
 
-        // 4. PARSER: Mengganti placeholder {no}, {instansi}, dll dengan data asli
+        // Variabel pengganti untuk Placeholder di format_nomor
         $map = [
-            '{no}'       => $no,
-            '{instansi}' => $category->instansi,
-            '{kode}'     => $category->kode_kategori,
-            '{bulan}'    => $bulan,
-            '{tahun}'    => $tahun,
+            '{no}'    => $no,
+            '{bulan}' => $bulanDigit,
+            '{tahun}' => $tahun,
         ];
 
-        // Mengembalikan nomor surat sesuai format di database
+        // Mengambil pola dari database (Contoh: {no}/Ext/ST/...)
+        // lalu mengganti placeholder dengan data asli
         return str_replace(array_keys($map), array_values($map), $category->format_nomor);
     }
+
+    // private function generateNomorSurat($jenis)
+    // private function generateNomorSurat($categoryId)
+    // {
+    //     // 1. Ambil data kategori dari DB
+    //     $category = Category::findOrFail($categoryId);
+
+    //     // 2. Siapkan variabel pendukung
+    //     $tahun = date('Y');
+    //     $bulanRomawi = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+    //     $bulan = $bulanRomawi[date('n')];
+
+    //     // 3. Hitung urutan berdasarkan category_id
+    //     $urutan = Surat::withTrashed()
+    //         ->where('category_id', $categoryId)
+    //         ->whereYear('created_at', $tahun)
+    //         ->count() + 1;
+
+    //     $no = str_pad($urutan, 3, '0', STR_PAD_LEFT);
+
+    //     // 4. PARSER: Mengganti placeholder {no}, {instansi}, dll dengan data asli
+    //     $map = [
+    //         '{no}'       => $no,
+    //         '{instansi}' => $category->instansi,
+    //         '{kode}'     => $category->kode_kategori,
+    //         '{bulan}'    => $bulan,
+    //         '{tahun}'    => $tahun,
+    //     ];
+
+    //     // Mengembalikan nomor surat sesuai format di database
+    //     return str_replace(array_keys($map), array_values($map), $category->format_nomor);
+    // }
+
+    // AJAX Handler untuk mendapatkan nomor surat otomatis
+    // public function getNomorAjax($categoryId)
+    // {
+    //     $nomor = $this->generateNomorSurat($categoryId);
+    //     return response()->json(['nomor' => $nomor]);
+    // }
     // {
     //     $tahun = date('Y');
     //     $bulanRomawi = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
@@ -175,16 +227,25 @@ class SuratController extends Controller
         $surat->delete();
         return redirect()->route('dashboard')->with('success', 'Arsip surat berhasil dihapus selamanya.');
     }
-    public function masuk()
+
+    // FUNGSI UNTUK SURAT MASUK
+    public function Masuk()
     {
-        // Mengambil data khusus surat masuk dengan pagination
-        $surat = Surat::where('jenis_surat', 'masuk')->latest()->paginate(10);
+        // Gunakan whereHas untuk memfilter berdasarkan kolom 'jenis' di tabel 'categories'
+        $surat = Surat::whereHas('category', function ($q) {
+            $q->where('jenis', 'masuk');
+        })->latest()->paginate(10);
+
         return view('surat.masuk', compact('surat'));
     }
-    public function keluar()
+
+    // FUNGSI UNTUK SURAT KELUAR
+    public function Keluar()
     {
-        // Mengambil data khusus surat keluar dengan pagination
-        $surat = Surat::where('jenis_surat', 'keluar')->latest()->paginate(10);
+        // Gunakan whereHas untuk memfilter berdasarkan kolom 'jenis' di tabel 'categories'
+        $surat = Surat::whereHas('category', function ($q) {
+            $q->where('jenis', 'keluar');
+        })->latest()->paginate(10);
 
         return view('surat.keluar', compact('surat'));
     }

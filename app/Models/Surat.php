@@ -11,14 +11,13 @@ class Surat extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-    'user_id',
-    'categorys_id',
-    'nomor_surat',
-    'nama_surat',
-    'jenis_surat',
-    'tanggal_surat',
-    'foto_bukti'
-];
+        'user_id',
+        'category_id',
+        'nomor_surat',
+        'nama_surat',
+        'tanggal_surat',
+        'foto_bukti'
+    ];
 
     /**
      * Relasi ke Category: Setiap surat milik satu kategori.
@@ -34,5 +33,10 @@ class Surat extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getFileUrlAttribute()
+    {
+        return asset('storage/surat/' . $this->foto_bukti);
     }
 }

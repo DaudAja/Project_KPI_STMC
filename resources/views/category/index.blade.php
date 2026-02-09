@@ -12,7 +12,7 @@
                         <label class="small fw-bold">Nama Kategori</label>
                         <input type="text" name="nama_kategori" class="form-control form-control-sm" placeholder="Contoh: Surat Tugas" required>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-3">
                         <div class="col-6">
                             <label class="small fw-bold">Instansi</label>
                             <input type="text" name="instansi" class="form-control form-control-sm" placeholder="STMC" required>

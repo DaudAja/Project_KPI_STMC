@@ -84,26 +84,35 @@
             </div>
 
             <div class="col-md-8">
-                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px; height: 85vh;">
+                {{-- Card dibuat dengan tinggi dinamis 85% dari tinggi layar (85vh) --}}
+                <div class="card border-0 shadow-sm overflow-hidden"
+                    style="border-radius: 15px; height: 85vh; display: flex; flex-direction: column;">
                     <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
                         <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-eye me-2 text-primary"></i> Pratinjau Dokumen
                         </h6>
-                        <small class="text-muted">Digital Scanner STMC</small>
+                        <div class="d-flex gap-2">
+                            <span
+                                class="badge bg-light text-primary border">{{ strtoupper($surat->category->sifat) }}</span>
+                            <small class="text-muted">Digital Scanner STMC</small>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
+
+                    {{-- Body card akan mengisi sisa ruang yang tersedia --}}
+                    <div class="card-body p-0" style="flex: 1; position: relative;">
                         @if ($surat->foto_bukti)
-                            <iframe src="{{ asset('storage/surat/' . $surat->foto_bukti) }}#toolbar=0" width="100%" height="650px"
-                                style="border: none;">
+                            {{-- #view=FitH memastikan PDF otomatis zoom menyesuaikan lebar layar --}}
+                            <iframe src="{{ asset('storage/surat/' . $surat->foto_bukti) }}#view=FitH" width="100%"
+                                height="100%" style="position: absolute; top: 0; left: 0; border: none;">
                             </iframe>
                         @else
-                            <div class="p-5 text-center text-secondary">
-                                <i class="bi bi-file-earmark-x display-1"></i>
-                                <p class="mt-3">Dokumen tidak ditemukan atau belum diunggah.</p>
+                            <div
+                                class="h-100 d-flex flex-column align-items-center justify-content-center text-secondary bg-light">
+                                <i class="bi bi-file-earmark-x display-1 opacity-25"></i>
+                                <p class="mt-3 fw-bold">Dokumen tidak ditemukan.</p>
                             </div>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endsection
+    @endsection

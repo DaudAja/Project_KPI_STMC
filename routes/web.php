@@ -34,8 +34,9 @@ Route::middleware(['auth', 'is_active'])->group(function () {
 
     // --- Rute Surat (Tambahan untuk AJAX Nomor Otomatis) ---
     // Rute ini penting agar saat pilih kategori, nomor langsung muncul tanpa refresh
+    Route::get('/get-categories/{sifat}/{jenis}', [SuratController::class, 'getCategories']);
     Route::get('/get-nomor-surat/{categoryId}', [SuratController::class, 'getNomorAjax']);
-
+    
     // Rute surat yang sudah ada (pastikan sudah mengarah ke controller yang benar)
     Route::get('/surat/input', [SuratController::class, 'input'])->name('surat.input');
     Route::post('/surat/store', [SuratController::class, 'store'])->name('surat.store');

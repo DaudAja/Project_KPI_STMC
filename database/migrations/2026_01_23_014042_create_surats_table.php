@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('nomor_surat');
             $table->string('nama_surat');
-            $table->enum('jenis_surat', ['masuk', 'keluar']);
             $table->date('tanggal_surat');
             $table->text('keterangan')->nullable();
             $table->string('foto_bukti');

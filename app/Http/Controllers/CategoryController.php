@@ -24,4 +24,10 @@ class CategoryController extends Controller
 
         return redirect()->back()->with('success', 'Kategori Berhasil Ditambah!');
     }
+
+    public function getByJenis($jenis)
+    {
+        $category = Category::where('jenis', $jenis)->get();
+        return response()->json($category);
+    }
 }
