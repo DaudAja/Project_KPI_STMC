@@ -242,11 +242,16 @@ class SuratController extends Controller
     // FUNGSI UNTUK SURAT KELUAR
     public function Keluar()
     {
-        // Gunakan whereHas untuk memfilter berdasarkan kolom 'jenis' di tabel 'categories'
-        $surat = Surat::whereHas('category', function ($q) {
-            $q->where('jenis', 'keluar');
-        })->latest()->paginate(10);
+        // Mengambil surat keluar yang sifatnya INTERNAL
+        $internal = Surat::with('category')->whereHas('category', function ($q) {
+            $q->where('jenis', 'keluar')->where('sifat', 'internal');
+        })->latest()->get();
 
-        return view('surat.keluar', compact('surat'));
+        // Mengambil surat keluar yang sifatnya EXTERNAL
+        $external = Surat::with('category')->whereHas('category', function ($q) {
+            $q->where('jenis', 'keluar')->where('sifat', 'external');
+        })->latest()->get();
+
+        return view('surat.keluar', compact('internal', 'external'));
     }
 }

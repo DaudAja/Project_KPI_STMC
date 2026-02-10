@@ -1,67 +1,60 @@
 @extends('layouts.Master')
 
 @section('content')
-<div class="container-fluid animate__animated animate__fadeIn">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card p-4 border-0 shadow-sm text-white" style="background: linear-gradient(45deg, #2ecc71, #27ae60); border-radius: 20px;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2 class="fw-bold mb-1">Arsip Surat Keluar</h2>
-                        <p class="mb-0 opacity-75">Daftar seluruh dokumen keluar dari klinik STMC.</p>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold">Daftar Surat Keluar</h4>
+        </div>
+
+        {{-- Navigasi Tab --}}
+        <div class="row mb-4">
+            <div class="col-12">
+                {{-- bg-white untuk latar belakang, p-2 untuk jarak dalam --}}
+                <ul class="nav nav-pills p-2 bg- shadow-sm rounded-pill d-inline-flex" id="pills-tab" role="tablist"
+                    style="border: 1px solid #e9ecef;">
+
+                    {{-- TAB INTERNAL --}}
+                    <li class="nav-item" role="presentation">
+                        {{-- Kita pakai 'text-success' agar tulisan default-nya hijau --}}
+                        <button class="nav-link active rounded-pill px-4 fw-bold text-warning" id="pills-internal-tab"
+                            data-bs-toggle="pill" data-bs-target="#pills-internal" type="button" role="tab">
+                            <i class="bi bi-building me-2"></i> INTERNAL
+                            <span
+                                class="badge rounded-pill bg-warning text-white ms-1 shadow-sm">{{ $internal->count() }}</span>
+                        </button>
+                    </li>
+
+                    {{-- TAB EKSTERNAL --}}
+                    <li class="nav-item" role="presentation">
+                        {{-- 'text-success' memastikan tulisan EKSTERNAL berwarna hijau saat tidak aktif --}}
+                        <button class="nav-link rounded-pill px-4 fw-bold text-success" id="pills-external-tab"
+                            data-bs-toggle="pill" data-bs-target="#pills-external" type="button" role="tab">
+                            <i class="bi bi-globe me-2"></i> EKSTERNAL
+                            <span
+                                class="badge rounded-pill bg-success text-white ms-1 shadow-sm">{{ $external->count() }}</span>
+                        </button>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="tab-content" id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="pills-internal" role="tabpanel">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        @include('surat.partials.table_keluar', ['data' => $internal, 'color' => 'warning'])
                     </div>
-                    <div class="p-3 bg-white bg-opacity-20 rounded-circle">
-                        <i class="bi bi-envelope-upload fs-1"></i>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-external" role="tabpanel">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        @include('surat.partials.table_keluar', ['data' => $external, 'color' => 'success'])
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="card border-0 shadow-sm">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th class="ps-4">No. Surat</th>
-                            <th>Nama Surat</th>
-                            <th>Tanggal Keluar</th>
-                            <th>Oleh</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($surat as $s)
-                        <tr>
-                            <td class="ps-4 fw-medium text-success">{{ $s->nomor_surat }}</td>
-                            <td>{{ $s->nama_surat }}</td>
-                            <td>{{ optional($s->tanggal_surat)->translatedFormat('d F Y') ?? '-' }}</td>
-                            <td><small class="text-muted">{{ $s->user->nama_lengkap ?? 'Admin' }}</small></td>
-                            <td class="text-center">
-                                <a href="{{ asset('storage/surat/' . $s->foto_bukti) }}" target="_blank" class="btn btn-sm btn-outline-success border-0">
-                                    <i class="bi bi-file-earmark-pdf-fill"></i> Buka
-                                </a>
-
-                                <a href="{{ route('surat.show', $s->id) }}" class="btn btn-sm btn-outline-success border-0">
-                                    <i class="bi bi-eye-fill"></i> Detail
-                                </a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">Belum ada arsip surat keluar.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="card-footer bg-white border-0 py-3">
-            <div class="d-flex justify-content-center">
-                {{ $surat->links('pagination::bootstrap-5') }}
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
