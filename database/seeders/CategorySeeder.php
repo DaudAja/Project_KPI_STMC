@@ -33,7 +33,7 @@ class CategorySeeder extends Seeder
             'jenis' => 'masuk',
             'sifat' => 'external',
             'kode_kategori' => 'EXT',
-            'format_nomor' => 'MANUAL' // Untuk surat masuk biasanya diinput manual
+            'format_nomor' => 'MANUAL'
         ]);
 
         // 4. Contoh Kategori Surat Masuk (Internal)
@@ -42,7 +42,7 @@ class CategorySeeder extends Seeder
             'jenis' => 'masuk',
             'sifat' => 'internal',
             'kode_kategori' => 'INT',
-            'format_nomor' => 'MANUAL' // Untuk surat masuk biasanya diinput manual
+            'format_nomor' => 'MANUAL'
         ]);
     }
 }

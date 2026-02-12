@@ -14,7 +14,7 @@ class CategoryController extends Controller
             'nama_kategori' => 'required',
             'instansi'      => 'required',
             'kode_kategori' => 'required',
-            'format_nomor'  => 'required', // Contoh: {no}/{instansi}/{kode}/{bulan}/{tahun}
+            'format_nomor'  => 'required', 
         ]);
 
         $category = Category::create($request->all());

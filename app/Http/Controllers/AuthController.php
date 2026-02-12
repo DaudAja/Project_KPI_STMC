@@ -72,8 +72,8 @@ class AuthController extends Controller
             'email' => $request->email,
             'no_telepon' => $request->no_telepon,
             'password' => Hash::make($request->password),
-            'role' => 'user',      // Default sebagai user
-            'status' => 'pending', // Sesuai permintaan Anda: harus diverifikasi admin
+            'role' => 'user',      
+            'status' => 'pending',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');

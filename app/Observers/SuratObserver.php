@@ -31,11 +31,11 @@ class SuratObserver
     public function updated(Surat $surat): void
     {
         ActivityLog::create([
-        'user_id'    => Auth::id(),
-        'aksi'       => 'Edit Surat',
-        'deskripsi'  => "Mengubah detail surat nomor: {$surat->nomor_surat}",
-        'ip_address' => request()->ip(),
-    ]);
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Edit Surat',
+            'deskripsi'  => "Mengubah detail surat nomor: {$surat->nomor_surat}",
+            'ip_address' => request()->ip(),
+        ]);
     }
 
     /**
@@ -44,11 +44,11 @@ class SuratObserver
     public function deleted(Surat $surat): void
     {
         ActivityLog::create([
-        'user_id'    => Auth::id(),
-        'aksi'       => 'Hapus Surat',
-        'deskripsi'  => "Menghapus surat nomor: {$surat->nomor_surat}",
-        'ip_address' => request()->ip(),
-    ]);
+            'user_id'    => Auth::id(),
+            'aksi'       => 'Hapus Surat',
+            'deskripsi'  => "Menghapus surat nomor: {$surat->nomor_surat}",
+            'ip_address' => request()->ip(),
+        ]);
     }
 
     /**
