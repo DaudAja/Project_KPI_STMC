@@ -18,7 +18,7 @@
                 <div class="card-body p-4 p-md-5">
                     <form action="{{ route('surat.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="row g-4">
+                        <div class="row g-2">
 
                             {{-- 1. Pilihan Sifat Surat --}}
                             <div class="col-md-4">

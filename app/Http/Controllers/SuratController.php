@@ -165,7 +165,7 @@ class SuratController extends Controller
         ]);
 
         // Tambahkan Log Aktivitas (Opsional tapi sangat disarankan)
-        ActivityLog::record('Tambah Surat', 'Menambahkan surat nomor: ' . $surat->nomor_surat);
+        // ActivityLog::record('Tambah Surat', 'Menambahkan surat nomor: ' . $surat->nomor_surat, $request->category_id);
 
         return redirect()->route('dashboard')->with('success', 'Surat berhasil diarsipkan!');
     }
@@ -231,12 +231,23 @@ class SuratController extends Controller
     // FUNGSI UNTUK SURAT MASUK
     public function Masuk()
     {
-        // Gunakan whereHas untuk memfilter berdasarkan kolom 'jenis' di tabel 'categories'
-        $surat = Surat::whereHas('category', function ($q) {
-            $q->where('jenis', 'masuk');
-        })->latest()->paginate(10);
+        // Mengambil surat keluar yang sifatnya INTERNAL
+        $internal = Surat::with('category')->whereHas('category', function ($q) {
+            $q->where('jenis', 'masuk')->where('sifat', 'internal');
+        })->latest()->get();
 
-        return view('surat.masuk', compact('surat'));
+        // Mengambil surat keluar yang sifatnya EXTERNAL
+        $external = Surat::with('category')->whereHas('category', function ($q) {
+            $q->where('jenis', 'masuk')->where('sifat', 'external');
+        })->latest()->get();
+
+        return view('surat.masuk', compact('internal', 'external'));
+        // // Gunakan whereHas untuk memfilter berdasarkan kolom 'jenis' di tabel 'categories'
+        // $surat = Surat::whereHas('category', function ($q) {
+        //     $q->where('jenis', 'masuk');
+        // })->latest()->paginate(10);
+
+        // return view('surat.masuk', compact('surat'));
     }
 
     // FUNGSI UNTUK SURAT KELUAR
@@ -253,5 +264,23 @@ class SuratController extends Controller
         })->latest()->get();
 
         return view('surat.keluar', compact('internal', 'external'));
+    }
+
+    public function download($id)
+    {
+        $surat = Surat::findOrFail($id);
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'aksi' => 'Download Surat',
+            'deskripsi' => "Mendownload file surat dengan nomor: {$surat->nomor_surat}",
+            'ip_address' => request()->ip(),
+        ]);
+
+        if (Storage::exists($surat)) {
+            return Storage::download($surat, $surat->foto_bukti);
+        } else {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
     }
 }

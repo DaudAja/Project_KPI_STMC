@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,19 +26,26 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
+
+            ActivityLog::create([
+                'user_id' => $user->id,
+                'aksi' => 'Login',
+                'deskripsi' => 'User masuk ke sistem.',
+                'ip_address' => $request->ip(),
+            ]);
 
             // Cek status user setelah login
-            if (Auth::user()->status === 'inactive') {
+            if ($user->status === 'inactive') {
                 return redirect()->route('account.inactive');
-            } elseif (Auth::user()->status === 'pending') {
+            } elseif ($user->status === 'pending') {
                 return redirect()->route('waiting.verification');
-            } elseif (Auth::user()->status === 'active') {
+            } elseif ($user->status === 'active') {
                 return redirect()->route('dashboard');
             }
-
-            // return redirect()->intended('dashboard');
         }
 
+        // Jika gagal login
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->onlyInput('email');
@@ -74,6 +82,12 @@ class AuthController extends Controller
     // Proses Logout
     public function logout(Request $request)
     {
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'aksi' => 'Logout',
+            'deskripsi' => 'User keluar dari sistem.',
+            'ip_address' => $request->ip(),
+        ]);
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

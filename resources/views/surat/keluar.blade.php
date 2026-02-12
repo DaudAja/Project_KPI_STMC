@@ -43,7 +43,7 @@
             <div class="tab-pane fade show active" id="pills-internal" role="tabpanel">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
-                        @include('surat.partials.table_keluar', ['data' => $internal, 'color' => 'warning'])
+                        @include('surat.partials.table_keluar', ['data' => $internal, 'color' => 'primary'])
                     </div>
                 </div>
             </div>

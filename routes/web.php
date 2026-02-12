@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
     // Rute ini penting agar saat pilih kategori, nomor langsung muncul tanpa refresh
     Route::get('/get-categories/{sifat}/{jenis}', [SuratController::class, 'getCategories']);
     Route::get('/get-nomor-surat/{categoryId}', [SuratController::class, 'getNomorAjax']);
-    
+
     // Rute surat yang sudah ada (pastikan sudah mengarah ke controller yang benar)
     Route::get('/surat/input', [SuratController::class, 'input'])->name('surat.input');
     Route::post('/surat/store', [SuratController::class, 'store'])->name('surat.store');
@@ -113,8 +114,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
         Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.force_delete');
 
         // Route Log Aktivitas (Opsional jika sudah ada controllernya)
-        Route::get('/logs', function () {
-            return view('admin.logs');
-        })->name('logs');
+        // Ganti closure sebelumnya dengan ini
+        Route::get('/admin/logs', [ActivityLogController::class, 'index'])->name('admin.logs');
     });
 });

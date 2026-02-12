@@ -28,7 +28,16 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             display: flex;
+            font-size: 12px;
+            line-height: 1;
         }
+        .form-control, .form-select, .btn{
+            font-size: 12px;
+            padding: 0.5rem 0.75rem;
+        }
+
+        h5 {font-size: 1.1rem;}
+        h6 {font-size: .95rem;}
 
         /* Sidebar Styling */
         .sidebar {
@@ -72,7 +81,7 @@
             margin: 0.2rem 1rem;
             padding: 0.8rem 1.2rem;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 12px;
             display: flex;
             align-items: center;
             transition: 0.2s ease;
@@ -124,7 +133,7 @@
 
         .sidebar-divider {
             margin: 1.5rem 1.5rem 0.5rem;
-            font-size: 0.7rem;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -184,8 +193,8 @@
                 <a href="{{ route('admin.users.index') }}" class="nav-link {{ Request::routeIs('admin.users.index') ? 'active' : '' }}">
                     <i class="bi bi-person-check-fill"></i> Verifikasi
                 </a>
-                <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
-                    <i class="bi bi-terminal-fill"></i> Aktivitas
+                 <a href="{{ route('admin.admin.logs') }}" class="nav-link {{ Request::routeIs('admin.admin.logs') ? 'active' : '' }}">
+                    <i class="bi bi-terminal"></i> Aktivitas
                 </a>
                 <a href="{{ route('admin.users.trash') }}" class="nav-link {{ Request::routeIs('admin.users.trash') ? 'active' : '' }}">
                     <i class="bi bi-trash3-fill text-danger"></i> Arsip User

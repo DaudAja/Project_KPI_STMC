@@ -18,7 +18,7 @@ class ActivityLog extends Model
             'deskripsi' => $deskripsi,
             'ip_address' => Request::ip(),
         ]);
-    }   
+    }
 
     public function user()
     {

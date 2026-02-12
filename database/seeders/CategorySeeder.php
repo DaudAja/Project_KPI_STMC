@@ -11,7 +11,7 @@ class CategorySeeder extends Seeder
     {
         // 1. Kategori Eksternal Keluar
         Category::create([
-            'nama_kategori' => 'Surat Keluar Eksternal (ST)',
+            'nama_kategori' => 'Surat Keluar Eksternal',
             'jenis' => 'keluar',
             'sifat' => 'external',
             'kode_kategori' => 'EXT',
@@ -27,12 +27,21 @@ class CategorySeeder extends Seeder
             'format_nomor' => '{no}/Int/22.00/{bulan}-{tahun}'
         ]);
 
-        // 3. Contoh Kategori Surat Masuk (Umum)
+        // 3. Contoh Kategori Surat Masuk (External)
         Category::create([
-            'nama_kategori' => 'Surat Masuk Umum',
+            'nama_kategori' => 'Surat Masuk eksternal',
             'jenis' => 'masuk',
             'sifat' => 'external',
-            'kode_kategori' => 'IN',
+            'kode_kategori' => 'EXT',
+            'format_nomor' => 'MANUAL' // Untuk surat masuk biasanya diinput manual
+        ]);
+
+        // 4. Contoh Kategori Surat Masuk (Internal)
+        Category::create([
+            'nama_kategori' => 'Surat Masuk internal',
+            'jenis' => 'masuk',
+            'sifat' => 'internal',
+            'kode_kategori' => 'INT',
             'format_nomor' => 'MANUAL' // Untuk surat masuk biasanya diinput manual
         ]);
     }
