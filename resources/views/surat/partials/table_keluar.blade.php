@@ -1,3 +1,20 @@
+<div class="row mb-3 ">
+    <div class="col-md-6 offset-md-6 d-flex justify-content-end">
+        <form action="{{ route('surat.keluar') }}" method="GET">
+            <div class="input-group input-group-sm shadow-sm">
+                <input type="text" name="search" class="form-control" placeholder="Cari nomor atau perihal..."
+                    value="{{ request('search') }}">
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+                @if (request('search'))
+                    <a href="{{ route('surat.keluar') }}" class="btn btn-outline-secondary">Reset</a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="table-responsive">
     <table class="table table-hover align-middle">
         <thead class="bg-light">
@@ -19,7 +36,8 @@
                     <td class="text-center"><span
                             class="badge bg-{{ $color }} bg-opacity-10 text-{{ $color }}">{{ $item->category->sifat }}</span>
                     </td>
-                    <td class="text-center"><small class="text-muted">{{ $item->user->nama_lengkap ?? 'Admin' }}</small></td>
+                    <td class="text-center"><small class="text-muted">{{ $item->user->nama_lengkap ?? 'Admin' }}</small>
+                    </td>
                     <td class="text-center">
                         <a href="{{ asset('storage/surat/' . $item->foto_bukti) }}" target="_blank"
                             class="btn btn-sm btn-outline-success border-0">

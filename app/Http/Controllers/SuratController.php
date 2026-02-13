@@ -118,36 +118,55 @@ class SuratController extends Controller
     }
 
     // FUNGSI UNTUK SURAT MASUK
-    public function Masuk()
+    public function Masuk(Request $request)
     {
-        // Mengambil surat keluar yang sifatnya INTERNAL
-        $internal = Surat::with('category')->whereHas('category', function ($q) {
-            $q->where('jenis', 'masuk')->where('sifat', 'internal');
-        })->latest()->get();
+        $search = $request->get('search');
 
-        // Mengambil surat keluar yang sifatnya EXTERNAL
-        $external = Surat::with('category')->whereHas('category', function ($q) {
-            $q->where('jenis', 'masuk')->where('sifat', 'external');
-        })->latest()->get();
+        // Query Dasar
+        $baseQuery = function ($sifat) use ($search) {
+            return Surat::with('category', 'user')
+                ->whereHas('category', function ($q) use ($sifat) {
+                    $q->where('jenis', 'masuk')->where('sifat', $sifat);
+                })
+                ->when($search, function ($q) use ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('nomor_surat', 'LIKE', "%$search%")
+                            ->orWhere('nama_surat', 'LIKE', "%$search%");
+                    });
+                });
+        };
+
+        $internal = $baseQuery('internal')->latest()->get();
+        $external = $baseQuery('external')->latest()->get();
 
         return view('surat.masuk', compact('internal', 'external'));
     }
 
     // FUNGSI UNTUK SURAT KELUAR
-    public function Keluar()
+    public function Keluar(request $request)
     {
-        // Mengambil surat keluar yang sifatnya INTERNAL
-        $internal = Surat::with('category')->whereHas('category', function ($q) {
-            $q->where('jenis', 'keluar')->where('sifat', 'internal');
-        })->latest()->get();
+        $search = $request->get('search');
 
-        // Mengambil surat keluar yang sifatnya EXTERNAL
-        $external = Surat::with('category')->whereHas('category', function ($q) {
-            $q->where('jenis', 'keluar')->where('sifat', 'external');
-        })->latest()->get();
+        // Query Dasar
+        $baseQuery = function ($sifat) use ($search) {
+            return Surat::with('category', 'user')
+                ->whereHas('category', function ($q) use ($sifat) {
+                    $q->where('jenis', 'keluar')->where('sifat', $sifat);
+                })
+                ->when($search, function ($q) use ($search) {
+                    $q->where(function ($sq) use ($search) {
+                        $sq->where('nomor_surat', 'LIKE', "%$search%")
+                            ->orWhere('nama_surat', 'LIKE', "%$search%");
+                    });
+                });
+        };
+
+        $internal = $baseQuery('internal')->latest()->get();
+        $external = $baseQuery('external')->latest()->get();
 
         return view('surat.keluar', compact('internal', 'external'));
     }
+
 
     public function download($id)
     {

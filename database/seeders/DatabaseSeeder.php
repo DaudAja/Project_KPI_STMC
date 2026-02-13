@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Surat;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,22 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'nama_lengkap' => 'Admin STMC',
-            'email' => 'admin@stmc.com',
-            'no_telepon' => '08123456789',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-            'status' => 'active',
+        $this->call([
+            CategorySeeder::class,
         ]);
 
-        User::create([
-            'nama_lengkap' => 'Parma',
-            'email' => 'parma@gmail.com',
-            'no_telepon' => '082196031870',
-            'password' => Hash::make('parma123'),
-            'role' => 'user',
-            'status' => 'active',
-        ]);
+        User::factory()->create(
+            [
+                'nama_lengkap' => 'Admin STMC',
+                'email' => 'admin@test.com',
+                'status' => 'active',
+            ]
+        );
+
+        Surat::factory(50)->create();
     }
 }
