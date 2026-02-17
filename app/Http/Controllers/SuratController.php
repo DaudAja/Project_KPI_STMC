@@ -70,6 +70,8 @@ class SuratController extends Controller
     // 2. FUNGSI UNTUK PROSES SIMPAN (POST)
     public function store(Request $request)
     {
+        // dd($request->all());
+
         $request->validate([
             'category_id'   => 'required|exists:categories,id', // Validasi kategori
             'nama_surat'    => 'required|string|max:255',
